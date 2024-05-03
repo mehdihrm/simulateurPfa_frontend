@@ -11,6 +11,7 @@ import { RegisterComponent } from './component/register/register.component';
 import { NavbarComponent } from './component/navbar/navbar.component';
 import {FormsModule} from "@angular/forms";
 import { HomeComponent } from './component/home/home.component';
+import { ClientComponent } from './component/client/client.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { HomeComponent } from './component/home/home.component';
     HeaderComponent,
     RegisterComponent,
     NavbarComponent,
-    HomeComponent
+    HomeComponent,
+    ClientComponent
   ],
   imports: [
     BrowserModule,

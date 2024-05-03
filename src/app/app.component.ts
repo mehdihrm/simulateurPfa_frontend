@@ -34,7 +34,7 @@ export class AppComponent implements OnInit{
 
     if (this.userIsLoggedIn) {
       const user = this.authService.getUser();
-      this.router.navigate(['/home'])
+
     }
     this.eventBusSub = this.eventBusService.on('logout', () => {
       this.logout();

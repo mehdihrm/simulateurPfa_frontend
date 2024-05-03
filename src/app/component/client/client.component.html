@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-body d-flex justify-content-between align-items-center">
+    <h5 class="card-title fw-semibold mb-4">Liste des clients</h5>
+    <button type="button" class="btn btn-outline-success m-1">Ajouter un client</button>
+  </div>
+
+  <div class="card-body">
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Prénom</th>
+        <th scope="col">Nom</th>
+        <th scope="col">Date de naissance</th>
+        <th scope="col">Profession</th>
+        <th scope="col">E-mail</th>
+        <th scope="col">Numéro de téléphone</th>
+        <th scope="col">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Remplacer les valeurs bidon par les valeurs réelles -->
+      <tr *ngFor="let client of clients">
+        <td>{{client.id}}</td>
+        <td>{{client.firstName}}</td>
+        <td>{{client.lastName}}</td>
+        <td>{{client.dateOfBirth}}</td>
+        <td>{{client.profession}}</td>
+        <td>{{client.email}}</td>
+        <td>{{client.phoneNumber}}</td>
+        <td>
+          <button type="button" class="btn btn-sm btn-warning" title="Modifier">
+            <i class="ti ti-pencil"></i>
+          </button>
+          <button type="button" class="btn btn-sm btn-danger" title="Supprimer">
+            <i class="ti ti-trash"></i>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
