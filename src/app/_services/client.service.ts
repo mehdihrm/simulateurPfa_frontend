@@ -19,5 +19,14 @@ export class ClientService {
   getAllClients():Observable<Client[]>{
     return this.http.get<Client[]>(CLIENT_API+'get/all',this.httpOptions);
   }
+  addClient(client:Client):Observable<Client>{
+    return this.http.post<Client>(CLIENT_API+'add',client,this.httpOptions);
+  }
+  updateClient(client:Client):Observable<Client>{
+    return this.http.put<Client>(CLIENT_API+'update',client,this.httpOptions);
+  }
+  deleteClient(id:number):Observable<void>{
+    return this.http.delete<void>(CLIENT_API+'delete/'+id,this.httpOptions);
+  }
 
 }

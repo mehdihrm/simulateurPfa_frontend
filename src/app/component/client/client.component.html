@@ -1,7 +1,9 @@
 <div class="card">
   <div class="card-body d-flex justify-content-between align-items-center">
     <h5 class="card-title fw-semibold mb-4">Liste des clients</h5>
-    <button type="button" class="btn btn-outline-success m-1">Ajouter un client</button>
+    <button type="button" class="btn btn-outline-success m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Ajouter un client
+    </button>
   </div>
 
   <div class="card-body">
@@ -28,16 +30,185 @@
         <td>{{client.profession}}</td>
         <td>{{client.email}}</td>
         <td>{{client.phoneNumber}}</td>
-        <td>
-          <button type="button" class="btn btn-sm btn-warning" title="Modifier">
+        <td class="table-action" (click)="sendClient(client)">
+          <a href="javascript: void(0);" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdropEditClient">
             <i class="ti ti-pencil"></i>
-          </button>
-          <button type="button" class="btn btn-sm btn-danger" title="Supprimer">
+          </a>
+          <a href="javascript: void(0);" class="btn btn-sm btn-danger" (click)="onDeleteClient()" title="Supprimer">
             <i class="ti ti-trash"></i>
-          </button>
+          </a>
         </td>
       </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- Modal d'ajout de client -->
+<div class="modal fade modal-dialog-scrollable modal-lg" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Ajouter un client</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="p-2" #addForm="ngForm" (ngSubmit)="addForm.valid && onAddClient(addForm)">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="lastName" class="form-label">Nom</label>
+                <input ngModel name="lastName" #lastName="ngModel" type="text" class="form-control form-control-light" id="lastName" required placeholder="Entrer nom du client">
+                <div *ngIf="lastName.touched && lastName.invalid" class="text-danger">
+                  Le nom est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="firstName" class="form-label">Prénom</label>
+                <input ngModel name="firstName" #firstName="ngModel" type="text" class="form-control form-control-light" id="firstName" required placeholder="Entrer prénom du client">
+                <div *ngIf="firstName.touched && firstName.invalid" class="text-danger">
+                  Le prénom est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="dateOfBirth" class="form-label">Date de naissance</label>
+                <input ngModel name="dateOfBirth" #dateOfBirth="ngModel" type="date" class="form-control form-control-light" id="dateOfBirth" required >
+                <div *ngIf="dateOfBirth.touched && dateOfBirth.invalid" class="text-danger">
+                  La date de naissance est requise.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="email" class="form-label">Email</label>
+                <input ngModel name="email" #email="ngModel" type="email" class="form-control form-control-light" id="email" required placeholder="Entrer l'email du client">
+                <div *ngIf="email.touched && email.invalid" class="text-danger">
+                  L'email est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="phoneNumber" class="form-label">Numéro de téléphone</label>
+                <input ngModel name="phoneNumber" #phoneNumber="ngModel" type="text" pattern="^(0[67])(\d{8})$" class="form-control form-control-light" id="phoneNumber" required placeholder="Entrer le numéro de téléphone du client">
+                <div *ngIf="phoneNumber.touched && phoneNumber.invalid" class="text-danger">
+                  Le numéro de téléphone est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="profession" class="form-label">Profession</label>
+                <select ngModel name="profession" #profession="ngModel" id="profession" class="form-select form-control-light" required>
+                  <option value="SALARIE">Salarié</option>
+                  <option value="RETRAITE">Retraité</option>
+                  <option value="FONCTIONNAIRE">Fonctionnaire</option>
+                  <option value="AUTRE">Autre</option>
+                </select>
+                <div *ngIf="profession.touched && profession.invalid" class="text-danger">
+                  La profession est requise.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="addForm.invalid">Ajouter</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal de modification de client -->
+<div class="modal fade modal-dialog-scrollable modal-lg" id="staticBackdropEditClient" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelEdit" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabelEdit">Modifier un client</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="p-2" #editForm="ngForm" (ngSubmit)="editForm.valid && onEditClient(editForm)">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="id" class="form-label">Id</label>
+                <input ngModel="{{selectedClient?.id}}" name="id" readonly class="form-control form-control-light" id="id" required>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="lastNameEdit" class="form-label">Nom</label>
+                <input ngModel="{{selectedClient?.lastName}}" name="lastName" #lastName="ngModel" type="text" class="form-control form-control-light" id="lastNameEdit" required placeholder="Entrer nom du client">
+                <div *ngIf="lastName.touched && lastName.invalid" class="text-danger">
+                  Le nom est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="firstName" class="form-label">Prénom</label>
+                <input ngModel="{{selectedClient?.firstName}}" name="firstName" #firstName="ngModel" type="text" class="form-control form-control-light" id="firstNameEdit" required placeholder="Entrer prénom du client">
+                <div *ngIf="firstName.touched && firstName.invalid" class="text-danger">
+                  Le prénom est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="dateOfBirth" class="form-label">Date de naissance</label>
+                <input ngModel="{{selectedClient?.dateOfBirth}}" name="dateOfBirth" #dateOfBirth="ngModel" type="date" class="form-control form-control-light" id="dateOfBirthEdit" required >
+                <div *ngIf="dateOfBirth.touched && dateOfBirth.invalid" class="text-danger">
+                  La date de naissance est requise.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="emailEdit" class="form-label">Email</label>
+                <input ngModel="{{selectedClient?.email}}" name="email" #email="ngModel" type="email" class="form-control form-control-light" id="emailEdit" required placeholder="Entrer l'email du client">
+                <div *ngIf="email.touched && email.invalid" class="text-danger">
+                  L'email est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="phoneNumberEdit" class="form-label">Numéro de téléphone</label>
+                <input ngModel="{{selectedClient?.phoneNumber}}" name="phoneNumber" #phoneNumber="ngModel" type="text" pattern="^(0[67])(\d{8})$" class="form-control form-control-light" id="phoneNumberEdit" required placeholder="Entrer le numéro de téléphone du client">
+                <div *ngIf="phoneNumber.touched && phoneNumber.invalid" class="text-danger">
+                  Le numéro de téléphone est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="professionEdit" class="form-label">Profession</label>
+                <select ngModel="{{selectedClient?.profession}}" name="profession" #profession="ngModel" id="professionEdit" class="form-select form-control-light" required>
+                  <option value="SALARIE">Salarié</option>
+                  <option value="RETRAITE">Retraité</option>
+                  <option value="FONCTIONNAIRE">Fonctionnaire</option>
+                  <option value="AUTRE">Autre</option>
+                </select>
+                <div *ngIf="profession.touched && profession.invalid" class="text-danger">
+                  La profession est requise.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="editForm.invalid">Modifier</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
   </div>
 </div>
