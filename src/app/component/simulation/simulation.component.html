@@ -1,0 +1,137 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+    <h5 class="card-title fw-semibold mb-4">Simulations récentes : </h5>
+    <button type="button" class="btn btn-outline-success m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Nouvelle Simulation
+    </button>
+    </div>
+    <div class="row">
+      <div *ngFor="let simulation of simulations" class="col-sm-4">
+        <div [ngClass]="{
+              'card': true,
+              'text-white': simulation.typeDeCredit === 'AUTOMOBILE' || simulation.typeDeCredit === 'CONSOMATION',
+              'bg-primary': simulation.typeDeCredit === 'AUTOMOBILE',
+              'bg-danger': simulation.typeDeCredit === 'CONSOMATION',
+              'bg-light': simulation.typeDeCredit === 'IMMOBILIER',
+              'mb-3': true
+              }" style="max-width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Crédit {{simulation.typeDeCredit}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Id : {{simulation.id}}</h6>
+            <p class="card-text">Client : {{simulation.client.firstName}} {{simulation.client.lastName}}</p>
+            <p class="card-text">Montant : {{simulation.montantCredit}} DH</p>
+            <p class="card-text">Durée : {{simulation.dureeCredit}} MOIS</p>
+            <p *ngIf="simulation.typeDeCredit === 'AUTOMOBILE'">Apport : {{simulation.apport}} DH</p>
+            <a (click)="openSimulationDetails(simulation)" data-bs-toggle="modal" data-bs-target="#simulationDetailsModal" [ngClass]="{
+                            'btn': true,
+                            'btn-outline-success': simulation.typeDeCredit === 'AUTOMOBILE',
+                            'btn-outline-primary': simulation.typeDeCredit === 'IMMOBILIER',
+                            'btn-outline-secondary': simulation.typeDeCredit === 'CONSOMATION',
+                            'm-1': true
+                            }">Simuler</a>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+<!-- Modal d'ajout de simulation -->
+<div class="modal fade modal-dialog-scrollable modal-lg" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Ajouter une nouvelle simulation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="p-2" #addForm="ngForm" (ngSubmit)="addForm.valid && onAddSimulation(addForm)">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="idClient" class="form-label">Client</label>
+                <select class="form-select form-control-light" #idClient="ngModel" ngModel id="idClient" name="idClient">
+                  <option *ngFor="let client of clients" ngValue="{{client.id}}">{{client.firstName}} {{client.lastName}} </option>
+                </select>
+                <div *ngIf="idClient.touched && idClient.invalid" class="text-danger">
+                  Le client est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="typeDeCredit" class="form-label">Type de crédit</label>
+                <select #typeDeCredit="ngModel" class="form-select" id="typeDeCredit" name="typeDeCredit" ngModel required>
+                  <option value="AUTOMOBILE">Automobile</option>
+                  <option value="CONSOMATION">Consommation</option>
+                  <option value="IMMOBILIER">Immobilier</option>
+                </select>
+                <div *ngIf="typeDeCredit.touched && typeDeCredit.invalid" class="text-danger">
+                  Le type de crédit est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="montantTotal" class="form-label">Montant total du crédit</label>
+                <input ngModel name="montantTotal" #montantTotal="ngModel" type="number" class="form-control form-control-light" id="montantTotal" required  placeholder="Entrer le montant total">
+                <div *ngIf="montantTotal.touched && montantTotal.invalid" class="text-danger">
+                  Le montant total est requis.
+                </div>
+              </div>
+            </div>
+            <div *ngIf="typeDeCredit.value === 'AUTOMOBILE'" class="col-md-12">
+              <div class="mb-4">
+                <label for="apport" class="form-label">Apport</label>
+                <input ngModel name="apport" #apport="ngModel" type="email" class="form-control form-control-light" id="apport" required placeholder="Entrer l'apport">
+                <div *ngIf="apport.touched && apport.invalid" class="text-danger">
+                  L'apport est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="duree" class="form-label">Durée</label>
+                <input ngModel name="duree" #duree="ngModel" type="number"  class="form-control form-control-light" id="duree" required placeholder="Entrer la durée du crédit">
+                <div *ngIf="duree.touched && duree.invalid" class="text-danger">
+                  La durée est requise.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="addForm.invalid">Ajouter</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal de détails de simulation -->
+<div class="modal fade modal-dialog-scrollable modal-lg" id="simulationDetailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="simulationDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="simulationDetailsModalLabel">Résultat Simulation : </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Type de crédit: {{selectedSimulation?.typeDeCredit}}</h5>
+        <h6>Id : {{selectedSimulation?.id}}</h6>
+        <p>Client : {{selectedSimulation?.client?.firstName}} {{selectedSimulation?.client?.lastName}}</p>
+        <p>Profession : {{selectedSimulation?.client?.profession}}</p>
+        <p>Montant total sans intérêts : {{selectedSimulation?.montantTotal}} DH</p>
+        <p>Montant total avec intérêts : {{selectedSimulation?.montantTotalAvecInteret}} DH</p>
+        <p>Taux intéret : {{selectedSimulation?.tauxInteret}} %</p>
+        <p>Durée : {{selectedSimulation?.duree}} MOIS</p>
+        <p>Mensualité : {{selectedSimulation?.mensualite}} DH</p>
+        <p>Frais de dossier : {{selectedSimulation?.fraisDeDossier}} DH</p>
+      </div>
+    </div>
+  </div>
+</div>
+
