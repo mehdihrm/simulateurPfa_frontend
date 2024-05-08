@@ -37,6 +37,9 @@ export class AuthService {
   getUser() {
     return this.storageService.getUser();
   }
+  getRole(){
+    return this.storageService.getRole();
+  }
 
   isLoggedIn() {
     return this.getToken() !== null;

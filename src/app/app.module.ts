@@ -14,6 +14,8 @@ import { HomeComponent } from './component/home/home.component';
 import { ClientComponent } from './component/client/client.component';
 import { SimulationComponent } from './component/simulation/simulation.component';
 import {AuthGuard} from "./guards/auth.guard";
+import { UserComponent } from './components/user/user.component';
+import {AuthorizationGuard} from "./guards/authorization.guard";
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import {AuthGuard} from "./guards/auth.guard";
     NavbarComponent,
     HomeComponent,
     ClientComponent,
-    SimulationComponent
+    SimulationComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -33,7 +36,7 @@ import {AuthGuard} from "./guards/auth.guard";
     HttpClientModule,
     FormsModule
   ],
-  providers: [AuthGuard],
+  providers: [AuthGuard,AuthorizationGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

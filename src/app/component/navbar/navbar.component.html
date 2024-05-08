@@ -31,11 +31,11 @@
       <span class="hide-menu">Simulation</span>
     </a>
   </li>
-  <li class="nav-small-cap">
+  <li *ngIf="authService.getRole() == 'ADMIN'" class="nav-small-cap">
     <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
     <span class="hide-menu">ADMINISTRATION</span>
   </li>
-  <li class="sidebar-item">
+  <li *ngIf="authService.getRole() == 'ADMIN'" class="sidebar-item">
     <a class="sidebar-link" href="./users" aria-expanded="false">
                 <span>
                   <i class="ti ti-user-plus"></i>

@@ -6,6 +6,8 @@ import {HomeComponent} from "./component/home/home.component";
 import {ClientComponent} from "./component/client/client.component";
 import {SimulationComponent} from "./component/simulation/simulation.component";
 import {AuthGuard} from "./guards/auth.guard";
+import {UserComponent} from "./components/user/user.component";
+import {AuthorizationGuard} from "./guards/authorization.guard";
 
 const routes: Routes = [
   {
@@ -34,7 +36,14 @@ const routes: Routes = [
     path:'simulations',
     component:SimulationComponent,
     canActivate:[AuthGuard]
+  },
+  {
+    path:'users',
+    component:UserComponent,
+    canActivate:[AuthGuard,AuthorizationGuard],data : {roles:['ADMIN']}
   }
+
+
 ];
 
 @NgModule({

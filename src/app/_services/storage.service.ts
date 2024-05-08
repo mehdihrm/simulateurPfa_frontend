@@ -25,9 +25,16 @@ export class StorageService {
   getToken() {
     return sessionStorage.getItem('token');
   }
+  setRole(role:string){
+    sessionStorage.setItem('role',role);
+  }
+  getRole(){
+    return sessionStorage.getItem('role');
+  }
 
   clearToken() {
     sessionStorage.removeItem('token');
+    sessionStorage.removeItem('role')
     sessionStorage.removeItem(USER_KEY);
   }
 }
