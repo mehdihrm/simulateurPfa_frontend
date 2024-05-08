@@ -5,6 +5,7 @@ import {RegisterComponent} from "./component/register/register.component";
 import {HomeComponent} from "./component/home/home.component";
 import {ClientComponent} from "./component/client/client.component";
 import {SimulationComponent} from "./component/simulation/simulation.component";
+import {AuthGuard} from "./guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -20,15 +21,19 @@ const routes: Routes = [
   },
   {
     path:'home',
-    component:HomeComponent
+    component:HomeComponent,
+    canActivate:[AuthGuard]
   },
   {
     path:'client',
-    component:ClientComponent
+    component:ClientComponent,
+    canActivate:[AuthGuard]
+
   },
   {
     path:'simulations',
-    component:SimulationComponent
+    component:SimulationComponent,
+    canActivate:[AuthGuard]
   }
 ];
 

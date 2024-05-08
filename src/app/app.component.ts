@@ -18,12 +18,7 @@ export class AppComponent implements OnInit{
     this.router.events.subscribe((event) =>{
       if(event instanceof NavigationEnd){
         const currentRoute = this.router.url;
-        this.showToolAndSideBar = !['/register','/','/404'].includes(currentRoute);
-        console.log('Shownavbar : '+this.showToolAndSideBar)
-        console.log('User is logged in ? ' + this.authService.isLoggedIn())
-        if(this.showToolAndSideBar && !this.authService.isLoggedIn()){
-          this.router.navigate(['/'])
-        }
+        this.showToolAndSideBar = !['/register','/','/404','/login'].includes(currentRoute);
       }
     })
   }

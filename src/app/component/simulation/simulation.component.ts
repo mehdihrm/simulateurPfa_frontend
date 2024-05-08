@@ -15,7 +15,7 @@ import {SimulationResponse} from "../../_model/simulationResponse";
 export class SimulationComponent implements OnInit{
   public simulations!: Simulation[];
   public clients!:Client[];
-  public selectedSimulation!:SimulationResponse;
+  public selectedSimulation:any = null;
   constructor(private simulationService:SimulationService,private clientService:ClientService) {
   }
   ngOnInit(): void {

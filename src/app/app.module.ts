@@ -13,6 +13,7 @@ import {FormsModule} from "@angular/forms";
 import { HomeComponent } from './component/home/home.component';
 import { ClientComponent } from './component/client/client.component';
 import { SimulationComponent } from './component/simulation/simulation.component';
+import {AuthGuard} from "./guards/auth.guard";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { SimulationComponent } from './component/simulation/simulation.component
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
