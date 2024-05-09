@@ -26,5 +26,11 @@ export class SimulationService {
   getSimulations():Observable<Simulation[]>{
     return this.http.get<Simulation[]>(SIMULATION_API+'all',this.httpOptions);
   }
+  updateSimulation(simulation:Simulation):Observable<Simulation>{
+    return this.http.put<Simulation>(SIMULATION_API+'update',simulation,this.httpOptions);
+  }
+  deleteSimulation(id:string){
+    return this.http.delete(SIMULATION_API+'delete/'+id,this.httpOptions);
+  }
 
 }

@@ -71,4 +71,36 @@ export class SimulationComponent implements OnInit{
     )
   }
 
+  onDeleteSimulation(simulation: Simulation) {
+    // @ts-ignore
+    if(confirm("Voulez-vous bien supprimer la simulation ? "+simulation.typeDeCredit +" d'un montant de "+ simulation.montantCredit + " DH")){
+      // @ts-ignore
+      this.simulationService.deleteSimulation(simulation.id).subscribe(
+        ()=>{
+          this.getSimulations()
+        },
+        (error:HttpErrorResponse)=>{
+          alert(error.message);
+        }
+      )
+    }
+  }
+
+  onEditSimulation(editForm: NgForm) {
+    console.log(editForm.value)
+    this.simulationService.updateSimulation(editForm.value).subscribe(
+      (response:Simulation)=>{
+        this.selectedSimulation = response;
+        this.getSimulations();
+      },
+      (error:HttpErrorResponse)=>{
+        alert(error.message)
+      }
+    )
+  }
+
+  selectSimulation(simulation: Simulation) {
+    this.selectedSimulation = simulation;
+    console.log(simulation)
+  }
 }

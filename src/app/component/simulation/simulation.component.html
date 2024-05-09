@@ -16,6 +16,7 @@
               'bg-light': simulation.typeDeCredit === 'IMMOBILIER',
               'mb-3': true
               }" style="max-width: 18rem;">
+
           <div class="card-body">
             <h5 class="card-title">Crédit {{simulation.typeDeCredit}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Id : {{simulation.id}}</h6>
@@ -23,14 +24,30 @@
             <p class="card-text">Montant : {{simulation.montantCredit}} DH</p>
             <p class="card-text">Durée : {{simulation.dureeCredit}} MOIS</p>
             <p *ngIf="simulation.typeDeCredit === 'AUTOMOBILE'">Apport : {{simulation.apport}} DH</p>
-            <a (click)="openSimulationDetails(simulation)" data-bs-toggle="modal" data-bs-target="#simulationDetailsModal" [ngClass]="{
+
+            <div class="d-flex justify-content-end align-items-center">
+              <a (click)="openSimulationDetails(simulation)" data-bs-toggle="modal" data-bs-target="#simulationDetailsModal" [ngClass]="{
                             'btn': true,
                             'btn-outline-success': simulation.typeDeCredit === 'AUTOMOBILE',
                             'btn-outline-primary': simulation.typeDeCredit === 'IMMOBILIER',
                             'btn-outline-secondary': simulation.typeDeCredit === 'CONSOMATION',
                             'm-1': true
                             }">Simuler</a>
+              <a (click)="selectSimulation(simulation)" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalModification">
+                <i class="ti ti-pencil"></i>
+              </a>
+              <a href="javascript: void(0);" [ngClass]="{
+                                'btn':true,
+                                'btn-sm':true,
+                                'btn-danger':simulation.typeDeCredit === 'IMMOBILIER' || simulation.typeDeCredit === 'AUTOMOBILE',
+                                'btn-secondary':simulation.typeDeCredit === 'CONSOMATION'
+                   }" (click)="onDeleteSimulation(simulation)" title="Supprimer">
+                <i class="ti ti-trash"></i>
+              </a>
+            </div>
           </div>
+
+
         </div>
       </div>
 
@@ -104,6 +121,80 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
             <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="addForm.invalid">Ajouter</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal de modification de simulation -->
+<div class="modal fade modal-dialog-scrollable modal-lg" id="modalModification" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelModif" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabelModif">Modifier une simulation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="p-2" #editForm="ngForm" (ngSubmit)="editForm.valid && onEditSimulation(editForm)">
+          <input type="text" name="id" ngModel="{{selectedSimulation?.id}}" hidden>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="idClientEdit" class="form-label">Client</label>
+                <select class="form-select form-control-light" #idClientEdit="ngModel" ngModel="{{selectedSimulation?.client.id}}" id="idClientEdit" name="idClient">
+                  <option *ngFor="let client of clients" ngValue="{{client.id}}">{{client.firstName}} {{client.lastName}} </option>
+                </select>
+                <div *ngIf="idClientEdit.touched && idClientEdit.invalid" class="text-danger">
+                  Le client est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="typeDeCreditEdit" class="form-label">Type de crédit</label>
+                <select #typeDeCreditEdit="ngModel" class="form-select" id="typeDeCreditEdit" name="typeDeCredit" ngModel="{{selectedSimulation?.typeDeCredit}}" required>
+                  <option value="AUTOMOBILE">Automobile</option>
+                  <option value="CONSOMATION">Consommation</option>
+                  <option value="IMMOBILIER">Immobilier</option>
+                </select>
+                <div *ngIf="typeDeCreditEdit.touched && typeDeCreditEdit.invalid" class="text-danger">
+                  Le type de crédit est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="montantTotalEdit" class="form-label">Montant total du crédit</label>
+                <input ngModel="{{selectedSimulation?.montantCredit}}" name="montantTotal" #montantTotalEdit="ngModel" type="number" class="form-control form-control-light" id="montantTotalEdit" required  placeholder="Entrer le montant total">
+                <div *ngIf="montantTotalEdit.touched && montantTotalEdit.invalid" class="text-danger">
+                  Le montant total est requis.
+                </div>
+              </div>
+            </div>
+            <div *ngIf="typeDeCreditEdit.value === 'AUTOMOBILE'" class="col-md-12">
+              <div class="mb-4">
+                <label for="apportEdit" class="form-label">Apport</label>
+                <input ngModel="{{selectedSimulation?.apport}}" name="apport" #apportEdit="ngModel" type="email" class="form-control form-control-light" id="apportEdit" required placeholder="Entrer l'apport">
+                <div *ngIf="apportEdit.touched && apportEdit.invalid" class="text-danger">
+                  L'apport est requis.
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="mb-4">
+                <label for="dureeEdit" class="form-label">Durée</label>
+                <input ngModel="{{selectedSimulation?.dureeCredit}}" name="duree" #dureeEdit="ngModel" type="number"  class="form-control form-control-light" id="dureeEdit" required placeholder="Entrer la durée du crédit">
+                <div *ngIf="dureeEdit.touched && dureeEdit.invalid" class="text-danger">
+                  La durée est requise.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="editForm.invalid">Modifier</button>
           </div>
         </form>
 
